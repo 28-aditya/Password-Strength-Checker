@@ -1,101 +1,86 @@
-def main_passwordChecker(password, firstName, lastName):
-
+class PasswordValidator:
     '''
 
-    Parameters:
-        1. Must contain an upper case letter
-        2. Must contain a lower case letter
-        3. Must contain a special character
-        4. Cannot have first or last name in the password
-        5. Must have at least 8 characters
-        6. Must not be in the 500 most common passwords file
+        Parameters:
+            1. Must contain an upper case letter
+            2. Must contain a lower case letter
+            3. Must contain a special character
+            4. Cannot have first or last name in the password
+            5. Must have at least 8 characters
+            6. Must not be in the 500 most common passwords file
 
 
     '''
-    # PARAMETERS
-    hasUpperCase = False
-    hasLowerCase = False
-    hasSpecialChar = False
-    noFirstName = False
-    noLastName = False
-    isGreaterThan8 = False
-    notCommon = False
-    passwordIsValid = False
+    def __init__(self, password, firstName, lastName):
 
-    # TEST 1
+        self.password = password
+        self.firstName = firstName
+        self.lastName = lastName
 
-    for character in "abcdefghijklmnopqrstuvwxyz":
-        if character in password:
-            hasLowerCase = True
-            break
+        # PASSWORD PARAMETERS
 
-    # TEST 2
+        self.hasUpperCase = False
+        self.hasLowerCase = False
+        self.hasSpecialChar = False
+        self.noFirstName = False
+        self.noLastName = False
+        self.isGreaterThan8 = False
+        self.notCommon = False
 
-    for character in "abcdefghijklmnopqrstuvwxyz":
-        if character.upper() in password:
-            hasUpperCase = True
-            break
+        self.passwordIsValid = False
 
-    # TEST 3
+    def check_upper_lower_special(self):
+        self.hasLowerCase = any(character.islower() for character in self.password)
+        self.hasUpperCase = any(character.isupper() for character in self.password)
+        self.hasSpecialChar = any(not character.isalnum() for character in self.password)
 
-    for character in password:
-        if not character.isalnum():
-            hasSpecialChar = True
-            break
+    def check_first_last_name(self):
+        self.noFirstName = self.firstName.lower() not in self.password.lower()
+        self.noLastName = self.lastName.lower() not in self.password.lower()
 
-    # TEST 4
+    def check_common(self):
+        with open("10k_Most_Common.txt") as mostCommonPasswords:
+            commonPasswords = {commonPassword.strip() for commonPassword in mostCommonPasswords}
+        self.notCommon = self.password not in commonPasswords
 
-    if firstName.lower() not in password.lower():
-        noFirstName = True
+    def check_length(self):
+        self.isGreaterThan8 = len(self.password)>=8
 
-    # TEST 5
+    def validate_password(self):
 
-    if lastName.lower() not in password.lower():
-        noLastName = True
+        self.check_upper_lower_special()
+        self.check_common()
+        self.check_length()
+        self.check_first_last_name()
 
-    # TEST 6
+        validity_parameters = (
+            self.hasUpperCase,
+            self.hasLowerCase,
+            self.hasSpecialChar, 
+            self.noFirstName,
+            self.noLastName,
+            self.isGreaterThan8,
+            self.notCommon,
+        )
 
-    if len(password)>=8:
-        isGreaterThan8 = True
-
-    # TEST 7
-
-    with open("10k-most-common.txt", "r") as commonPasswords:
-        mostCommonPasswords = [p.strip() for p in commonPasswords]
-        if password not in mostCommonPasswords:
-            notCommon = True
-    
-    # TESTS COMPLETE
-
-    parameterTuple = (isGreaterThan8,
-                       notCommon, 
-                       noLastName,
-                       noFirstName,
-                       hasLowerCase,
-                       hasUpperCase,
-                       hasSpecialChar)
-
-    if isGreaterThan8 and notCommon and noLastName and noFirstName and hasLowerCase and hasUpperCase and hasSpecialChar:
-        passwordIsValid = True
-        print("Your password is valid")
-        return [passwordIsValid]
-
-    
-    else:
-        if not isGreaterThan8:
-            print("Password Must Be At Least 8 Characters")
-        if not notCommon:
-            print("Your Password Is Too Common")
-        if not noFirstName:
-            print("Password Cannot Contain First Name")
-        if not noLastName:
-            print("Password Cannot Contain Last Name")
-        if not hasLowerCase:
-            print("Password Must Contain At Least One Lower Case Letter")
-        if not hasUpperCase:
-            print("Password Must Contain At Least One Upper Case Letter")
-        if not hasSpecialChar:
-            print("Password Must Contain At Least One Special Character (Ex: @, !, #, _)")
-
-        return [passwordIsValid, parameterTuple]
-        
+        self.passwordIsValid = all(validity_parameters)
+        if self.passwordIsValid:
+            print("Your Password Is Valid")
+            return [self.passwordIsValid, validity_parameters]
+        else:
+            if not self.isGreaterThan8:
+                print("Password Must Be At Least 8 Characters")
+            if not self.notCommon:
+                print("Your Password Is Too Common")
+            if not self.noFirstName:
+                print("Password Cannot Contain First Name")
+            if not self.noLastName:
+                print("Password Cannot Contain Last Name")
+            if not self.hasLowerCase:
+                print("Password Must Contain At Least One Lower Case Letter")
+            if not self.hasUpperCase:
+                print("Password Must Contain At Least One Upper Case Letter")
+            if not self.hasSpecialChar:
+                print("Password Must Contain At Least One Special Character (Ex: @, !, #, _)")
+            
+            return [self.passwordIsValid, validity_parameters]
