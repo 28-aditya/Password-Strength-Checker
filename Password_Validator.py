@@ -78,7 +78,7 @@ def main_passwordChecker(password, firstName, lastName):
     if isGreaterThan8 and notCommon and noLastName and noFirstName and hasLowerCase and hasUpperCase and hasSpecialChar:
         passwordIsValid = True
         print("Your password is valid")
-        return passwordIsValid
+        return [passwordIsValid]
 
     
     else:
@@ -97,5 +97,5 @@ def main_passwordChecker(password, firstName, lastName):
         if not hasSpecialChar:
             print("Password Must Contain At Least One Special Character (Ex: @, !, #, _)")
 
-        return parameterTuple
+        return [passwordIsValid, parameterTuple]
         
