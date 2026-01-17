@@ -29,32 +29,32 @@ class PasswordValidator:
 
         self.passwordIsValid = False
 
-    def check_upper_lower_special(self):
+    def checkUpperLowerSpecial(self):
         self.hasLowerCase = any(character.islower() for character in self.password)
         self.hasUpperCase = any(character.isupper() for character in self.password)
         self.hasSpecialChar = any(not character.isalnum() for character in self.password)
 
-    def check_first_last_name(self):
+    def checkFirstLastName(self):
         self.noFirstName = self.firstName.lower() not in self.password.lower()
         self.noLastName = self.lastName.lower() not in self.password.lower()
 
-    def check_common(self):
+    def checkCommon(self):
         with open("10k_Most_Common.txt") as mostCommonPasswords:
             commonPasswords = {commonPassword.strip() for commonPassword in mostCommonPasswords}
         self.notCommon = self.password not in commonPasswords
 
-    def check_length(self):
+    def checkLength(self):
         self.isGreaterThan8 = len(self.password)>=8
 
-    def validate_password(self):
+    def validatePassword(self):
 
         self.__init__()
-        self.check_upper_lower_special()
-        self.check_common()
-        self.check_length()
-        self.check_first_last_name()
+        self.checkUpperLowerSpecial()
+        self.checkCommon()
+        self.checkLength()
+        self.checkFirstLastName()
 
-        self.validity_parameters = (
+        self.validityParameters = (
             self.hasUpperCase,
             self.hasLowerCase,
             self.hasSpecialChar, 
@@ -64,10 +64,10 @@ class PasswordValidator:
             self.notCommon,
         )
 
-        self.passwordIsValid = all(validity_parameters)
+        self.passwordIsValid = all(self.validityParameters)
         if self.passwordIsValid:
             print("Your Password Is Valid")
-            return [self.passwordIsValid, validity_parameters]
+            return [self.passwordIsValid,self.validityParameters]
         else:
             if not self.isGreaterThan8:
                 print("Password Must Be At Least 8 Characters")
@@ -84,4 +84,4 @@ class PasswordValidator:
             if not self.hasSpecialChar:
                 print("Password Must Contain At Least One Special Character (Ex: @, !, #, _)")
             
-            return [self.passwordIsValid, self.validity_parameters]
+            return [self.passwordIsValid, self.validityParameters]
