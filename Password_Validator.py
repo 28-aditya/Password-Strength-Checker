@@ -48,12 +48,13 @@ class PasswordValidator:
 
     def validate_password(self):
 
+        self.__init__()
         self.check_upper_lower_special()
         self.check_common()
         self.check_length()
         self.check_first_last_name()
 
-        validity_parameters = (
+        self.validity_parameters = (
             self.hasUpperCase,
             self.hasLowerCase,
             self.hasSpecialChar, 
@@ -83,4 +84,4 @@ class PasswordValidator:
             if not self.hasSpecialChar:
                 print("Password Must Contain At Least One Special Character (Ex: @, !, #, _)")
             
-            return [self.passwordIsValid, validity_parameters]
+            return [self.passwordIsValid, self.validity_parameters]
