@@ -1,5 +1,6 @@
 import customtkinter as tk
 from PIL import Image
+from Password_Validator import PasswordValidator as pv
 
 class App:
     def __init__(self):
@@ -199,7 +200,32 @@ class App:
         print(f"First Name: {self.firstName}")
         print(f"Last Name: {self.lastName}")
         print(f"Password: {self.password}")
-        print(self.firstName,self.lastName)
 
+        validation = pv(self.password, self.firstName, self.lastName)
+        self.results = validation.validatePassword()
+
+        self.messagesForUser = []
+        if self.results[0]:
+            self.messagesForUser.append("Success, your password is up to security standards!")
+        else:
+            self.messagesForUser.append("Your password must abide by the following security standards.")
+            if not self.results[1][0]:
+                self.messagesForUser.append("• Password must contain at least one uppercase letter.")
+            if not self.results[1][1]:
+                self.messagesForUser.append("• Password must contain at least one lowercase letter.")
+            if not self.results[1][3]:
+                self.messagesForUser.append("• Password must contain at least one special character.")
+            if not self.results[1][4]:
+                self.messagesForUser.append("• Password must contain at least one number.")
+            if not self.results[1][4]:
+                self.messagesForUser.append("• Password must not contain your first name.")
+            if not self.results[1][5]:
+                self.messagesForUser.append("• Password must not contain your last name.")
+            if not self.results[1][6]:
+                self.messagesForUser.append("• Password must be 8 characters or longer.")
+            if not self.results[1][7]:
+                self.messagesForUser.append("• Password is too common.")
+            
+        print(self.messagesForUser)
         
 App()
