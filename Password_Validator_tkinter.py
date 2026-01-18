@@ -208,15 +208,16 @@ class App:
         if self.results[0]:
             self.messagesForUser.append("Success, your password is up to security standards!")
         else:
+            self.passwordTB.delete(0, 'end')
             self.messagesForUser.append("Your password must abide by the following security standards.")
             if not self.results[1][0]:
                 self.messagesForUser.append("• Password must contain at least one uppercase letter.")
             if not self.results[1][1]:
                 self.messagesForUser.append("• Password must contain at least one lowercase letter.")
             if not self.results[1][3]:
-                self.messagesForUser.append("• Password must contain at least one special character.")
-            if not self.results[1][4]:
                 self.messagesForUser.append("• Password must contain at least one number.")
+            if not self.results[1][4]:
+                self.messagesForUser.append("• Password must contain at least one special character.")
             if not self.results[1][4]:
                 self.messagesForUser.append("• Password must not contain your first name.")
             if not self.results[1][5]:
@@ -225,7 +226,17 @@ class App:
                 self.messagesForUser.append("• Password must be 8 characters or longer.")
             if not self.results[1][7]:
                 self.messagesForUser.append("• Password is too common.")
-            
-        print(self.messagesForUser)
+
+        self.instructionsTitle.configure(
+            text="✓ Validation Results" if self.results[0] else "❌ Validation Results"
+        )
         
+        messages_text = "\n".join(self.messagesForUser)
+        self.instructionsLabel.configure(
+            text=messages_text,
+            text_color="#10a210" if self.results[0] else "#c12a2a"
+        )
+        
+
+
 App()
